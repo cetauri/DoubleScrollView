@@ -112,7 +112,6 @@ static iToastSettings *sharedSettings = nil;
 			} else if (theSettings.gravity == iToastGravityCenter) {
 				point = CGPointMake(width/2, height/2);
 			} else {
-				// TODO : handle this case
 				point = theSettings.postition;
 			}
 			

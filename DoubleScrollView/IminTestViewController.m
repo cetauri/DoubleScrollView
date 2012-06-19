@@ -72,6 +72,7 @@ typedef enum {
     _scrollView.contentSize = CGSizeMake(570, 480);
     _scrollView.backgroundColor = [UIColor whiteColor];
     _scrollView.scrollEnabled = NO;
+    _scrollView.delegate = self;
     [self.view addSubview:_scrollView];
 
     
@@ -113,6 +114,11 @@ typedef enum {
     CURRENT_SIDE = CURRENT_LEFT_SIDE;
 }
 
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
+    UITableView *v = (UITableView*)[self.view viewWithTag:2];
+    [v reloadRowsAtIndexPaths:[v indexPathsForVisibleRows]
+                     withRowAnimation:UITableViewRowAnimationNone];
+}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -202,18 +208,23 @@ typedef enum {
 
                 CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
                 if (CURRENT_SIDE == CURRENT_RIGHT_SIDE) {
-                    lineImageView.frame = CGRectMake(70-11, 0, 4, height);
-                    bigDotImageView.frame = CGRectMake(70-18, 30, 18, 18);
-                }else{
                     lineImageView.frame = CGRectMake(7, 0, 4, height);
                     bigDotImageView.frame = CGRectMake(0, 30, 18, 18);
+                    [UIView animateWithDuration:0.3 animations:^(void){
+                        lineImageView.frame = CGRectMake(70-11, 0, 4, height);
+                        bigDotImageView.frame = CGRectMake(70-18, 30, 18, 18);
+                    }];
+                }else{
+                    lineImageView.frame = CGRectMake(70-11, 0, 4, height);
+                    bigDotImageView.frame = CGRectMake(70-18, 30, 18, 18);
+                    [UIView animateWithDuration:0.3 animations:^(void){
+                        lineImageView.frame = CGRectMake(7, 0, 4, height);
+                        bigDotImageView.frame = CGRectMake(0, 30, 18, 18);
+                    }];
                 }
 
-//                cell.textLabel.text = [NSString stringWithFormat:@"%i", indexPath.row];
                 [cell addSubview:lineImageView];
                 [cell addSubview:bigDotImageView];
-//                [cell bringSubviewToFront:bigDotImageView ];
-
             }
             break;
         }
@@ -300,7 +311,6 @@ typedef enum {
                                 [_scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
                             }
                             completion:^(BOOL finished){
-                                [v reloadData];
                             }];
         }
             break;
@@ -327,7 +337,6 @@ typedef enum {
                                 [_scrollView setContentOffset:CGPointMake(250, 0) animated:YES];
                             }
                             completion:^(BOOL finished){
-                                [v reloadData];
                             }];
         }
             break;
