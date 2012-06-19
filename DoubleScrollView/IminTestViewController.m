@@ -6,6 +6,7 @@
 //  Copyright (c) 2012년 __MyCompanyName__. All rights reserved.
 //
 
+#import <CoreGraphics/CoreGraphics.h>
 #import "IminTestViewController.h"
 #import "iToast.h"
 typedef enum {
@@ -17,6 +18,8 @@ typedef enum {
 @interface IminTestViewController (){
     TIMELINE_SIDE CURRENT_SIDE;
 }
+- (void)willRigitMove;
+- (void)willLeftMove;
 
 @end
 
@@ -157,7 +160,11 @@ typedef enum {
     _scrollView.userInteractionEnabled = YES;
     [[_scrollView viewWithTag:10] removeFromSuperview];
 
-    [_scrollView setContentOffset:CGPointMake(250, 0) animated:YES];
+    if (CURRENT_LEFT_SIDE == CURRENT_LEFT_SIDE){
+        [_scrollView setContentOffset:CGPointMake(250, 0) animated:YES];
+    } else {
+        [_scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+    }
 
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -183,6 +190,26 @@ typedef enum {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+//    NSLog(@"table tag : %i", tableView.tag);
+
+    switch (tableView.tag) {
+        case 1:
+            return 250;
+        case 3:
+            return 150;
+        default:
+        {
+            UITableView *v = nil;
+            if (CURRENT_SIDE == CURRENT_LEFT_SIDE){
+                v =[self.view viewWithTag:1];
+            } else{
+                v =[self.view viewWithTag:3];
+            }
+            CGRect frame = [v rectForRowAtIndexPath:indexPath];
+            return frame.size.height;
+        }
+            break;
+    }
     return 100;
 }
 
@@ -202,7 +229,12 @@ typedef enum {
             NSString *cellName = @"middleCell";
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellName];
-                
+
+                UILabel *label = [[UILabel alloc] init];
+                label.font = [UIFont boldSystemFontOfSize:10];
+                label.text = @"10:30";
+                [cell addSubview:label];
+
                 UIImageView *lineImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"line.png"]];
                 UIImageView *bigDotImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"point.png"]];
 
@@ -214,6 +246,8 @@ typedef enum {
                         lineImageView.frame = CGRectMake(70-11, 0, 4, height);
                         bigDotImageView.frame = CGRectMake(70-18, 30, 18, 18);
                     }];
+                    label.frame = CGRectMake(10, 31, 40, 15);
+                    label.textAlignment = UITextAlignmentLeft;
                 }else{
                     lineImageView.frame = CGRectMake(70-11, 0, 4, height);
                     bigDotImageView.frame = CGRectMake(70-18, 30, 18, 18);
@@ -221,6 +255,9 @@ typedef enum {
                         lineImageView.frame = CGRectMake(7, 0, 4, height);
                         bigDotImageView.frame = CGRectMake(0, 30, 18, 18);
                     }];
+                    label.frame = CGRectMake(20, 31, 40, 15);
+                    label.textAlignment = UITextAlignmentRight;
+
                 }
 
                 [cell addSubview:lineImageView];
@@ -263,7 +300,6 @@ typedef enum {
             [recognizer setTranslation:CGPointZero inView:iconButton];
 
 
-
             CGFloat len = translation.y+iconButton.frame.origin.y - frame.origin.y;
             NSLog(@"len : %f", len);
 
@@ -293,6 +329,7 @@ typedef enum {
 }
 
 #pragma mark - method for Scroll
+
 - (void)rightEffect:(UIPanGestureRecognizer *)recognizer {
     NSLog(@"recognizer.state : %i", recognizer.state);
 
@@ -300,18 +337,7 @@ typedef enum {
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateChanged:
         {
-            UITableView *v = (UITableView*)[self.view viewWithTag:2];
-            v.contentOffset = CGPointMake(0, 0);
-
-            [UIView transitionWithView:_scrollView
-                              duration:0
-                               options:UIViewAnimationOptionCurveEaseInOut
-                            animations:^(void){
-                                CURRENT_SIDE = CURRENT_LEFT_SIDE;
-                                [_scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
-                            }
-                            completion:^(BOOL finished){
-                            }];
+            [self willLeftMove];
         }
             break;
         default:
@@ -326,18 +352,7 @@ typedef enum {
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateChanged:
         {
-            UITableView *v = (UITableView*)[self.view viewWithTag:2];
-            v.contentOffset = CGPointMake(0, 0);
-
-            [UIView transitionWithView:_scrollView
-                              duration:0
-                               options:UIViewAnimationOptionCurveEaseInOut
-                            animations:^(void){
-                                CURRENT_SIDE = CURRENT_RIGHT_SIDE;
-                                [_scrollView setContentOffset:CGPointMake(250, 0) animated:YES];
-                            }
-                            completion:^(BOOL finished){
-                            }];
+            [self willRigitMove];
         }
             break;
         default:
@@ -347,4 +362,35 @@ typedef enum {
 
 
 #pragma mark - method for UITableView
+- (void)willLeftMove {
+    UITableView *v = (UITableView*)[self.view viewWithTag:2];
+    v.contentOffset = CGPointMake(0, 0);
+
+    [UIView transitionWithView:_scrollView
+                              duration:0
+                               options:UIViewAnimationOptionCurveEaseInOut
+                            animations:^(void){
+                                CURRENT_SIDE = CURRENT_LEFT_SIDE;
+                                [_scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+                            }
+                            completion:^(BOOL finished){
+                            }];
+}
+
+- (void)willRigitMove {
+
+    UITableView *v = (UITableView*)[self.view viewWithTag:2];
+    v.contentOffset = CGPointMake(0, 0);
+
+    [UIView transitionWithView:_scrollView
+                              duration:0
+                               options:UIViewAnimationOptionCurveEaseInOut
+                            animations:^(void){
+                                CURRENT_SIDE = CURRENT_RIGHT_SIDE;
+                                [_scrollView setContentOffset:CGPointMake(250, 0) animated:YES];
+                            }
+                            completion:^(BOOL finished){
+                            }];
+}
+
 @end
