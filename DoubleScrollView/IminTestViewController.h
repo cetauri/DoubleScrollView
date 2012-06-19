@@ -10,6 +10,7 @@
 
 @interface IminTestViewController : UIViewController<UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>{
     UIScrollView *_scrollView;
+    UIButton *iconButton;
 }
 
 @end
