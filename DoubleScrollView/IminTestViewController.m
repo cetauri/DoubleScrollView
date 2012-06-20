@@ -120,7 +120,7 @@ typedef enum {
 -(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
     UITableView *v = (UITableView*)[self.view viewWithTag:2];
     [v reloadRowsAtIndexPaths:[v indexPathsForVisibleRows]
-                     withRowAnimation:UITableViewRowAnimationNone];
+                     withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -194,28 +194,25 @@ typedef enum {
 
     switch (tableView.tag) {
         case 1:
-            return 250;
-        case 3:
             return 150;
+        case 3:
+            return 100;
         default:
         {
             UITableView *v = nil;
             if (CURRENT_SIDE == CURRENT_LEFT_SIDE){
-                v =[self.view viewWithTag:1];
-            } else{
-                v =[self.view viewWithTag:3];
+                v =(UITableView*)[self.view viewWithTag:1];
+            } else {
+                v =(UITableView*)[self.view viewWithTag:3];
             }
             CGRect frame = [v rectForRowAtIndexPath:indexPath];
             return frame.size.height;
         }
-            break;
     }
-    return 100;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = nil;
-
     switch (tableView.tag) {
         case 1:
         case 3:
@@ -242,6 +239,9 @@ typedef enum {
                 if (CURRENT_SIDE == CURRENT_RIGHT_SIDE) {
                     lineImageView.frame = CGRectMake(7, 0, 4, height);
                     bigDotImageView.frame = CGRectMake(0, 30, 18, 18);
+
+                    //1. 스크롤과 좌우 구별
+                    //
                     [UIView animateWithDuration:0.3 animations:^(void){
                         lineImageView.frame = CGRectMake(70-11, 0, 4, height);
                         bigDotImageView.frame = CGRectMake(70-18, 30, 18, 18);
@@ -277,7 +277,7 @@ typedef enum {
 }
 
 - (void)futureEffect:(UIPanGestureRecognizer *)recognizer {
-    NSLog(@"recognizer.state : %i", recognizer.state);
+//    NSLog(@"recognizer.state : %i", recognizer.state);
     CGRect frame = FOOT_IMAGE_FRAME;
     switch (recognizer.state) {
         case UIGestureRecognizerStateEnded:
@@ -331,7 +331,7 @@ typedef enum {
 #pragma mark - method for Scroll
 
 - (void)rightEffect:(UIPanGestureRecognizer *)recognizer {
-    NSLog(@"recognizer.state : %i", recognizer.state);
+//    NSLog(@"recognizer.state : %i", recognizer.state);
 
     switch (recognizer.state) {
         case UIGestureRecognizerStateEnded:
@@ -346,7 +346,7 @@ typedef enum {
 }
 
 - (void)leftEffect:(UIPanGestureRecognizer *)recognizer {
-    NSLog(@"recognizer.state : %i", recognizer.state);
+//    NSLog(@"recognizer.state : %i", recognizer.state);
 
     switch (recognizer.state) {
         case UIGestureRecognizerStateEnded:
@@ -368,7 +368,7 @@ typedef enum {
 
     [UIView transitionWithView:_scrollView
                               duration:0
-                               options:UIViewAnimationOptionCurveEaseInOut
+                               options:UIViewAnimationOptionTransitionCrossDissolve
                             animations:^(void){
                                 CURRENT_SIDE = CURRENT_LEFT_SIDE;
                                 [_scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
@@ -384,7 +384,7 @@ typedef enum {
 
     [UIView transitionWithView:_scrollView
                               duration:0
-                               options:UIViewAnimationOptionCurveEaseInOut
+                               options:UIViewAnimationOptionTransitionCrossDissolve
                             animations:^(void){
                                 CURRENT_SIDE = CURRENT_RIGHT_SIDE;
                                 [_scrollView setContentOffset:CGPointMake(250, 0) animated:YES];
