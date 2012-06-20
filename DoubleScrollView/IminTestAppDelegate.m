@@ -13,7 +13,7 @@
 @implementation IminTestAppDelegate
 
 @synthesize window = _window;
-@synthesize viewController = _viewController;
+//@synthesize viewController = _viewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -22,8 +22,8 @@
 
     IminTestViewController *controller = [[IminTestViewController alloc] initWithNibName:@"IminTestViewController" bundle:nil];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-    self.viewController = navController;
-    self.window.rootViewController = self.viewController;
+//    self.viewController = navController;
+    self.window.rootViewController = navController;//self.viewController;
     [self.window makeKeyAndVisible];
 
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];

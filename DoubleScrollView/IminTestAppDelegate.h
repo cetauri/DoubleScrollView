@@ -14,6 +14,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (strong, nonatomic) IminTestViewController *viewController;
+//@property (strong, nonatomic) IminTestViewController *viewController;
 
 @end

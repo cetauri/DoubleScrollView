@@ -73,8 +73,8 @@ typedef enum {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // content
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-    _scrollView.contentSize = CGSizeMake(570, 480);
+    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 480 - 44 - 20)];
+    _scrollView.contentSize = CGSizeMake(570, 480 - 44 - 20);
     _scrollView.backgroundColor = [UIColor whiteColor];
     _scrollView.scrollEnabled = NO;
     _scrollView.delegate = self;
@@ -82,7 +82,7 @@ typedef enum {
 
     
 
-    UITableView *leftTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 250, 480) style:UITableViewStylePlain];
+    UITableView *leftTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 250, 480 - 44 - 20) style:UITableViewStylePlain];
     leftTableView.dataSource = self;
     leftTableView.delegate = self;
     leftTableView.backgroundColor = [UIColor clearColor];
@@ -91,16 +91,16 @@ typedef enum {
 //    leftTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [_scrollView addSubview:leftTableView];
     
-    UITableView *middleScrollView = [[UITableView alloc] initWithFrame:CGRectMake(250, 0, 70, 480) style:UITableViewStylePlain];
+    UITableView *middleScrollView = [[UITableView alloc] initWithFrame:CGRectMake(250, 0, 70, 480 - 44 - 20) style:UITableViewStylePlain];
     middleScrollView.dataSource = self;
     middleScrollView.delegate = self;
     middleScrollView.backgroundColor = [UIColor clearColor];
     middleScrollView.tag = 2;
 //    middleScrollView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    middleScrollView.showsVerticalScrollIndicator = NO;
+    middleScrollView.showsVerticalScrollIndicator = YES;
     [_scrollView addSubview:middleScrollView];
     
-    UITableView *rightTableView = [[UITableView alloc] initWithFrame:CGRectMake(320, 0, 250, 480) style:UITableViewStylePlain];
+    UITableView *rightTableView = [[UITableView alloc] initWithFrame:CGRectMake(320, 0, 250, 480 - 44 - 20) style:UITableViewStylePlain];
     rightTableView.dataSource = self;
     rightTableView.delegate = self;
     rightTableView.backgroundColor = [UIColor clearColor];
@@ -120,7 +120,7 @@ typedef enum {
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 1000;
+    return 10;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -168,6 +168,13 @@ typedef enum {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (CURRENT_SIDE == CURRENT_LEFT_SIDE){
+        if (tableView.tag == 1){
+            tableView.showsVerticalScrollIndicator = YES;
+            tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 250-10);
+        }
+    }
+
     UITableViewCell *cell = nil;
     switch (tableView.tag) {
         case 1:
@@ -385,6 +392,7 @@ typedef enum {
                                 [_scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
                             }
                             completion:^(BOOL finished){
+                                v.showsVerticalScrollIndicator = YES;
                             }];
 }
 
@@ -401,6 +409,7 @@ typedef enum {
                                 [_scrollView setContentOffset:CGPointMake(250, 0) animated:YES];
                             }
                             completion:^(BOOL finished){
+                                v.showsVerticalScrollIndicator = NO;
                             }];
 }
 
