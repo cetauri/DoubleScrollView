@@ -17,9 +17,11 @@ typedef enum {
 #define FOOT_IMAGE_FRAME CGRectMake(320 - 52 - 35 ,5, 52, 52);
 @interface IminTestViewController (){
     TIMELINE_SIDE CURRENT_SIDE;
+    BOOL isHorizontalRefresh;
+
 }
-- (void)willRigitMove;
-- (void)willLeftMove;
+- (void)willRigitTableLeave;
+- (void)willLeftTableLeave;
 
 @end
 
@@ -106,67 +108,21 @@ typedef enum {
 //    rightTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [_scrollView addSubview:rightTableView];
     
-    UISwipeGestureRecognizer *leftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftEffect:)];
+    UISwipeGestureRecognizer *leftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onLeftViewGesture:)];
     leftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
     [leftTableView addGestureRecognizer:leftGesture];
     
-    UISwipeGestureRecognizer *rightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightEffect:)];
+    UISwipeGestureRecognizer *rightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onRightViewGesture:)];
     rightGesture.direction = UISwipeGestureRecognizerDirectionRight;
     [rightTableView addGestureRecognizer:rightGesture];
 
     CURRENT_SIDE = CURRENT_LEFT_SIDE;
 }
 
--(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
-    UITableView *v = (UITableView*)[self.view viewWithTag:2];
-    [v reloadRowsAtIndexPaths:[v indexPathsForVisibleRows]
-                     withRowAnimation:UITableViewRowAnimationAutomatic];
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    switch (scrollView.tag) {
-        case 1:
-        case 3:
-        {
-            UITableView *v = (UITableView*)[self.view viewWithTag:2];
-            v.contentOffset = scrollView.contentOffset;
-        }
-            break;
-        case 2:
-        {
-            
-            UITableView *v = nil;
-            if (CURRENT_SIDE == CURRENT_LEFT_SIDE) {
-                v = (UITableView*)[self.view viewWithTag:1];   
-            } else {
-                v = (UITableView*)[self.view viewWithTag:3];
-            }
-            v.contentOffset = scrollView.contentOffset;
-        }
-            break;
-            
-        default:
-            break;
-    }
-    
-}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return 1000;
 }
 
--(void)next:(id)sender{
-    [NSThread sleepForTimeInterval:2];
-    _scrollView.userInteractionEnabled = YES;
-    [[_scrollView viewWithTag:10] removeFromSuperview];
-
-    if (CURRENT_LEFT_SIDE == CURRENT_LEFT_SIDE){
-        [_scrollView setContentOffset:CGPointMake(250, 0) animated:YES];
-    } else {
-        [_scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
-    }
-
-}
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     switch (tableView.tag) {
@@ -196,7 +152,7 @@ typedef enum {
         case 1:
             return 150;
         case 3:
-            return 100;
+            return 550;
         default:
         {
             UITableView *v = nil;
@@ -237,24 +193,35 @@ typedef enum {
 
                 CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
                 if (CURRENT_SIDE == CURRENT_RIGHT_SIDE) {
-                    lineImageView.frame = CGRectMake(7, 0, 4, height);
-                    bigDotImageView.frame = CGRectMake(0, 30, 18, 18);
 
-                    //1. 스크롤과 좌우 구별
-                    //
-                    [UIView animateWithDuration:0.3 animations:^(void){
+                    if (isHorizontalRefresh){
+                        lineImageView.frame = CGRectMake(7, 0, 4, [UIScreen mainScreen].bounds.size.height);
+                        bigDotImageView.frame = CGRectMake(0, 30, 18, 18);
+                        [UIView animateWithDuration:0.3 animations:^(void){
+                            lineImageView.frame = CGRectMake(70-11, 0, 4, height);
+                            bigDotImageView.frame = CGRectMake(70-18, 30, 18, 18);
+                        }];
+                    } else {
                         lineImageView.frame = CGRectMake(70-11, 0, 4, height);
                         bigDotImageView.frame = CGRectMake(70-18, 30, 18, 18);
-                    }];
+                    }
+
                     label.frame = CGRectMake(10, 31, 40, 15);
                     label.textAlignment = UITextAlignmentLeft;
                 }else{
-                    lineImageView.frame = CGRectMake(70-11, 0, 4, height);
-                    bigDotImageView.frame = CGRectMake(70-18, 30, 18, 18);
-                    [UIView animateWithDuration:0.3 animations:^(void){
+                    if (isHorizontalRefresh){
+                        lineImageView.frame = CGRectMake(70-11, 0, 4, [UIScreen mainScreen].bounds.size.height);
+                        bigDotImageView.frame = CGRectMake(70-18, 30, 18, 18);
+                        [UIView animateWithDuration:0.3 animations:^(void){
+                            lineImageView.frame = CGRectMake(7, 0, 4, height);
+                            bigDotImageView.frame = CGRectMake(0, 30, 18, 18);
+                        }];
+
+                    } else {
                         lineImageView.frame = CGRectMake(7, 0, 4, height);
                         bigDotImageView.frame = CGRectMake(0, 30, 18, 18);
-                    }];
+                    }
+
                     label.frame = CGRectMake(20, 31, 40, 15);
                     label.textAlignment = UITextAlignmentRight;
 
@@ -329,15 +296,58 @@ typedef enum {
 }
 
 #pragma mark - method for Scroll
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
+    UITableView *v = (UITableView*)[self.view viewWithTag:2];
 
-- (void)rightEffect:(UIPanGestureRecognizer *)recognizer {
+    [v beginUpdates];
+    isHorizontalRefresh = true;
+    [v reloadRowsAtIndexPaths:[v indexPathsForVisibleRows]
+             withRowAnimation:UITableViewRowAnimationAutomatic];
+
+    [v endUpdates];
+
+    isHorizontalRefresh = false;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    switch (scrollView.tag) {
+        case 1:
+        case 3:
+        {
+            UITableView *v = (UITableView*)[self.view viewWithTag:2];
+            v.contentOffset = scrollView.contentOffset;
+        }
+            break;
+        case 2:
+        {
+            
+            UITableView *v = nil;
+            if (CURRENT_SIDE == CURRENT_LEFT_SIDE) {
+                v = (UITableView*)[self.view viewWithTag:1];   
+            } else {
+                v = (UITableView*)[self.view viewWithTag:3];
+            }
+            v.contentOffset = scrollView.contentOffset;
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+}
+
+#pragma mark - method for Gesture
+
+- (void)onRightViewGesture:(UIPanGestureRecognizer *)recognizer {
 //    NSLog(@"recognizer.state : %i", recognizer.state);
 
     switch (recognizer.state) {
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateChanged:
         {
-            [self willLeftMove];
+            [self willLeftTableLeave];
         }
             break;
         default:
@@ -345,14 +355,14 @@ typedef enum {
     }
 }
 
-- (void)leftEffect:(UIPanGestureRecognizer *)recognizer {
+- (void)onLeftViewGesture:(UIPanGestureRecognizer *)recognizer {
 //    NSLog(@"recognizer.state : %i", recognizer.state);
 
     switch (recognizer.state) {
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateChanged:
         {
-            [self willRigitMove];
+            [self willRigitTableLeave];
         }
             break;
         default:
@@ -361,8 +371,9 @@ typedef enum {
 }
 
 
-#pragma mark - method for UITableView
-- (void)willLeftMove {
+#pragma mark - method for Event
+- (void)willLeftTableLeave {
+
     UITableView *v = (UITableView*)[self.view viewWithTag:2];
     v.contentOffset = CGPointMake(0, 0);
 
@@ -377,7 +388,7 @@ typedef enum {
                             }];
 }
 
-- (void)willRigitMove {
+- (void)willRigitTableLeave {
 
     UITableView *v = (UITableView*)[self.view viewWithTag:2];
     v.contentOffset = CGPointMake(0, 0);
@@ -391,6 +402,19 @@ typedef enum {
                             }
                             completion:^(BOOL finished){
                             }];
+}
+
+-(void)next:(id)sender{
+    [NSThread sleepForTimeInterval:2];
+    _scrollView.userInteractionEnabled = YES;
+    [[_scrollView viewWithTag:10] removeFromSuperview];
+    
+    //    if (CURRENT_LEFT_SIDE == CURRENT_LEFT_SIDE){
+    //        [_scrollView setContentOffset:CGPointMake(250, 0) animated:YES];
+    //    } else {
+    //        [_scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+    //    }
+    
 }
 
 @end
