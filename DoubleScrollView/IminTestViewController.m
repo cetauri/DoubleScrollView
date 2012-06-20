@@ -22,7 +22,7 @@ typedef enum {
     UISwipeGestureRecognizer *menuRightGesture;
 
 }
-- (void)willRigitTableLeave;
+- (void)willRightTableLeave;
 - (void)willLeftTableLeave;
 
 @end
@@ -142,8 +142,13 @@ typedef enum {
             _scrollView.userInteractionEnabled = NO;
             [self performSelector:@selector(next:) withObject:nil afterDelay:0];
 
-            UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            activityIndicatorView.center = [[self.view viewWithTag:1] center];
+            UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+            activityIndicatorView.color = [UIColor lightGrayColor];
+            if (CURRENT_SIDE == CURRENT_LEFT_SIDE) {
+                activityIndicatorView.center = CGPointMake(160, 240 - 44-20);
+            } else {
+                activityIndicatorView.center = CGPointMake(160 + 250, 240 - 44-20);
+            }
             activityIndicatorView.tag = 10;
             [_scrollView addSubview:activityIndicatorView];
             [activityIndicatorView startAnimating];
@@ -162,7 +167,7 @@ typedef enum {
         case 1:
             return 150;
         case 3:
-            return 550;
+            return 200;
         default:
         {
             UITableView *v = nil;
@@ -262,11 +267,12 @@ typedef enum {
 
 - (void)futureEffect:(UIPanGestureRecognizer *)recognizer {
 //    NSLog(@"recognizer.state : %i", recognizer.state);
-    CGRect frame = FOOT_IMAGE_FRAME;
+    __block CGRect frame = FOOT_IMAGE_FRAME;
     switch (recognizer.state) {
         case UIGestureRecognizerStateEnded:
         {
             [UIView animateWithDuration:0.10 animations:^{
+                frame.origin.x = iconButton.frame.origin.x;
                 iconButton.frame = FOOT_IMAGE_FRAME;
 
             } completion:^(BOOL finished) {
@@ -379,7 +385,7 @@ typedef enum {
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateChanged:
         {
-            [self willRigitTableLeave];
+            [self willRightTableLeave];
         }
             break;
         default:
@@ -400,6 +406,7 @@ typedef enum {
                             animations:^(void){
                                 CURRENT_SIDE = CURRENT_LEFT_SIDE;
                                 [_scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+
                             }
                             completion:^(BOOL finished){
                                 v.showsVerticalScrollIndicator = YES;
@@ -407,9 +414,15 @@ typedef enum {
                                 [v removeGestureRecognizer:menuRightGesture];
                                 [v addGestureRecognizer:menuLeftGesture];
                             }];
+
+    [UIView animateWithDuration:0.3 animations:^(void){
+        CGRect iconFrame = iconButton.frame;
+        iconFrame.origin.x = 233;
+        iconButton.frame = iconFrame;
+    }];
 }
 
-- (void)willRigitTableLeave {
+- (void)willRightTableLeave {
 
     UITableView *v = (UITableView*)[self.view viewWithTag:2];
     v.contentOffset = CGPointMake(0, 0);
@@ -427,6 +440,13 @@ typedef enum {
                                 [v removeGestureRecognizer:menuLeftGesture];
                                 [v addGestureRecognizer:menuRightGesture];
                             }];
+    [UIView animateWithDuration:0.3 animations:^(void){
+        CGRect iconFrame = iconButton.frame;
+        iconFrame.origin.x = 35;
+        iconButton.frame = iconFrame;
+
+    }];
+
 }
 
 -(void)next:(id)sender{
@@ -434,11 +454,11 @@ typedef enum {
     _scrollView.userInteractionEnabled = YES;
     [[_scrollView viewWithTag:10] removeFromSuperview];
     
-    //    if (CURRENT_LEFT_SIDE == CURRENT_LEFT_SIDE){
-    //        [_scrollView setContentOffset:CGPointMake(250, 0) animated:YES];
-    //    } else {
-    //        [_scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
-    //    }
+    if (CURRENT_LEFT_SIDE == CURRENT_LEFT_SIDE){
+        [self willRightTableLeave];
+    } else {
+        [self willLeftTableLeave];
+    }
     
 }
 
