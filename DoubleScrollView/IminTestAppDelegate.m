@@ -25,6 +25,8 @@
     self.viewController = navController;
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
     return YES;
 }
 
