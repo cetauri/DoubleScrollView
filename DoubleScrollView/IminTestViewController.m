@@ -18,6 +18,8 @@ typedef enum {
 @interface IminTestViewController (){
     TIMELINE_SIDE CURRENT_SIDE;
     BOOL isHorizontalRefresh;
+    UISwipeGestureRecognizer *menuLeftGesture;
+    UISwipeGestureRecognizer *menuRightGesture;
 
 }
 - (void)willRigitTableLeave;
@@ -111,10 +113,18 @@ typedef enum {
     UISwipeGestureRecognizer *leftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onLeftViewGesture:)];
     leftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
     [leftTableView addGestureRecognizer:leftGesture];
-    
+
     UISwipeGestureRecognizer *rightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onRightViewGesture:)];
     rightGesture.direction = UISwipeGestureRecognizerDirectionRight;
     [rightTableView addGestureRecognizer:rightGesture];
+
+    menuLeftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onLeftViewGesture:)];
+    menuLeftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
+
+    menuRightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onRightViewGesture:)];
+    menuRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
+
+    [middleScrollView addGestureRecognizer:menuLeftGesture];
 
     CURRENT_SIDE = CURRENT_LEFT_SIDE;
 }
@@ -393,6 +403,9 @@ typedef enum {
                             }
                             completion:^(BOOL finished){
                                 v.showsVerticalScrollIndicator = YES;
+
+                                [v removeGestureRecognizer:menuRightGesture];
+                                [v addGestureRecognizer:menuLeftGesture];
                             }];
 }
 
@@ -410,6 +423,9 @@ typedef enum {
                             }
                             completion:^(BOOL finished){
                                 v.showsVerticalScrollIndicator = NO;
+
+                                [v removeGestureRecognizer:menuLeftGesture];
+                                [v addGestureRecognizer:menuRightGesture];
                             }];
 }
 
