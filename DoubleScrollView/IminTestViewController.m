@@ -21,6 +21,9 @@ typedef enum {
     UISwipeGestureRecognizer *menuLeftGesture;
     UISwipeGestureRecognizer *menuRightGesture;
 
+    NSMutableArray *leftArray;
+    NSMutableArray *rightArray;
+
 }
 - (void)willRightTableLeave;
 - (void)willLeftTableLeave;
@@ -29,6 +32,21 @@ typedef enum {
 
 @implementation IminTestViewController
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+
+    leftArray = [[NSMutableArray alloc] init];
+    rightArray = [[NSMutableArray alloc] init];
+    for (int i = 0 ; i < 10; i++){
+        int index = arc4random() % 2;
+        NSString *idx = [NSString stringWithFormat:@"%d", index];
+        [leftArray insertObject:idx atIndex:i];
+
+        index = arc4random() % 2;
+        [rightArray addObject:[NSString stringWithFormat:@"%d", index]];
+    }
+    return self;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -165,9 +183,23 @@ typedef enum {
 
     switch (tableView.tag) {
         case 1:
-            return 150;
+        {
+            NSString *type = [leftArray objectAtIndex:indexPath.row];
+            if ([type isEqualToString:@"0"]) {
+                return 327;
+            } else {
+                return 181;
+            }
+        }
         case 3:
-            return 200;
+        {
+            NSString *type = [rightArray objectAtIndex:indexPath.row];
+            if ([type isEqualToString:@"0"]) {
+                return 327;
+            } else {
+                return 181;
+            }
+        }
         default:
         {
             UITableView *v = nil;
@@ -193,10 +225,27 @@ typedef enum {
     UITableViewCell *cell = nil;
     switch (tableView.tag) {
         case 1:
+        {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+            NSString *type = [leftArray objectAtIndex:indexPath.row];
+            if ([type isEqualToString:@"0"]) {
+                cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"c1.png"]];
+            } else {
+                cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"c2.png"]];
+            }
+
+            break;
+        }
         case 3:
         {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-            cell.textLabel.text = @"test";
+            NSString *type = [rightArray objectAtIndex:indexPath.row];
+            if ([type isEqualToString:@"0"]) {
+                cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"c1.png"]];
+            } else {
+                cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"c2.png"]];
+            }
+
             break;
         }
         default:
@@ -207,7 +256,10 @@ typedef enum {
 
                 UILabel *label = [[UILabel alloc] init];
                 label.font = [UIFont boldSystemFontOfSize:10];
-                label.text = @"10:30";
+
+                int hh = arc4random() % 12 + 1;
+                int mm = arc4random() % 30 + 1;
+                label.text = [NSString stringWithFormat:@"%02d:%02d", hh, mm];
                 [cell addSubview:label];
 
                 UIImageView *lineImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"line.png"]];

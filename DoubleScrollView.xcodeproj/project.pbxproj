@@ -22,6 +22,8 @@
 		AFF3ED80159048FD00E8648D /* topbar_common.png in Resources */ = {isa = PBXBuildFile; fileRef = AF67BD9D158F0C1D00A965F6 /* topbar_common.png */; };
 		AFF3ED821590491100E8648D /* btn_foot_mini.png in Resources */ = {isa = PBXBuildFile; fileRef = AFF3ED811590491100E8648D /* btn_foot_mini.png */; };
 		AFF3ED8C15905C9800E8648D /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = AFF3ED8B15905C9800E8648D /* line.png */; };
+		AFF3ED8C15905C9800E8648F /* c1.png in Resources */ = {isa = PBXBuildFile; fileRef = AFF3ED8C15905C9800E8648E /* c1.png */; };
+		AFF3ED8C15905C9800E86491 /* c2.png in Resources */ = {isa = PBXBuildFile; fileRef = AFF3ED8C15905C9800E86490 /* c2.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,8 @@
 		AF67BD9D158F0C1D00A965FD /* iToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iToast.m; sourceTree = "<group>"; };
 		AFF3ED811590491100E8648D /* btn_foot_mini.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_foot_mini.png; sourceTree = "<group>"; };
 		AFF3ED8B15905C9800E8648D /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line.png; sourceTree = "<group>"; };
+		AFF3ED8C15905C9800E8648E /* c1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = c1.png; sourceTree = "<group>"; };
+		AFF3ED8C15905C9800E86490 /* c2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = c2.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +122,8 @@
 		AF67BD9D158F0C1D00A965F8 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				AFF3ED8C15905C9800E86490 /* c2.png */,
+				AFF3ED8C15905C9800E8648E /* c1.png */,
 				AF3F29C015906E63001F85FB /* point_mini.png */,
 				AF3F29C115906E63001F85FB /* point.png */,
 				AF3F29C215906E63001F85FB /* sum.png */,
@@ -196,6 +202,8 @@
 				AF3F29C315906E63001F85FB /* point_mini.png in Resources */,
 				AF3F29C415906E63001F85FB /* point.png in Resources */,
 				AF3F29C515906E63001F85FB /* sum.png in Resources */,
+				AFF3ED8C15905C9800E8648F /* c1.png in Resources */,
+				AFF3ED8C15905C9800E86491 /* c2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,14 +291,14 @@
 		AF67BD9C158F0C1D00A965F5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Myungjin Choi (Q4L2YCHP7Y)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Myungjin Choi (Q4L2YCHP7Y)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: KT Hitel Co., Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: KT Hitel Co., Ltd.";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DoubleScrollView/DoubleScrollView-Prefix.pch";
 				INFOPLIST_FILE = "DoubleScrollView/DoubleScrollView-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7E047EC8-6025-41D5-AE80-D32F919B65C1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7E047EC8-6025-41D5-AE80-D32F919B65C1";
+				PROVISIONING_PROFILE = "CA9D8E7E-61B8-41C4-9D60-8D70FFF5203E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CA9D8E7E-61B8-41C4-9D60-8D70FFF5203E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -304,8 +312,8 @@
 				GCC_PREFIX_HEADER = "DoubleScrollView/DoubleScrollView-Prefix.pch";
 				INFOPLIST_FILE = "DoubleScrollView/DoubleScrollView-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "64667114-9541-44FD-B861-8D60B8E044A9";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "64667114-9541-44FD-B861-8D60B8E044A9";
+				PROVISIONING_PROFILE = "CA9D8E7E-61B8-41C4-9D60-8D70FFF5203E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CA9D8E7E-61B8-41C4-9D60-8D70FFF5203E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
